@@ -36,9 +36,6 @@ npm install
 ```bash
 # Iniciar PostgreSQL con Docker Compose
 docker-compose up postgres -d
-
-# O usar PostgreSQL local y crear la base de datos
-createdb vehicle_transfers
 ```
 
 ### 3. Ejecutar Migraciones y Seeding
@@ -58,6 +55,19 @@ npm run start:dev
 npm run start:prod
 ```
 
+## API Documentation
+
+### Swagger UI
+
+La documentación interactiva de la API está disponible a través de Swagger UI:
+
+```
+http://localhost:3000/api
+```
+### Documentación de cURL
+
+Para ejemplos detallados de cómo usar la API con cURL, consulte la [documentación completa de la API](docs/API_DOCUMENTATION.md).
+
 ## API Endpoints
 
 ### Autenticación
@@ -70,17 +80,28 @@ npm run start:prod
 - `GET /transfers` - Listar todas las transferencias
 - `GET /transfers/:id` - Obtener transferencia por ID
 
-### Usuarios (Próximamente)
+### Usuarios
 
 - `POST /users` - Crear usuario
 - `GET /users` - Listar usuarios
 - `GET /users/:id` - Obtener usuario por ID
 
-### Vehículos (Próximamente)
+### Vehículos
 
 - `POST /vehicles` - Crear vehículo
 - `GET /vehicles` - Listar vehículos
 - `GET /vehicles/:id` - Obtener vehículo por ID
+
+### Redis
+
+- `GET /redis/ping` - Verificar conexión a Redis
+- `POST /redis/set` - Establecer un par clave-valor en Redis
+- `GET /redis/get/:key` - Obtener un valor por clave de Redis
+- `DELETE /redis/delete/:key` - Eliminar una clave de Redis
+
+### Reportes de Transferencias
+
+- `GET /transfer-report/generate` - Generar reporte de transferencias
 
 ## Ejemplo de Uso
 
@@ -172,25 +193,6 @@ npm run lint
 # Formateo de código
 npm run format
 ```
-
-
-## Next Steps
-
-- [-] Endpoints CRUD para:
-  - [X] Usuarios
-  - [X] Vehículos
-  - [ ] Proyectos
-  - [ ] Unidades Organizativas
-  - [ ] Roles y Permisos
-  - [X] Transferencias
-- [x] Autenticación JWT
-  - [x] Validacion de roles y permisos
-- [x] Docker
-- [X] CronJobs de ejemplo
-- [X] Redis caching (render kev - value)
-- [ ] Deploy Render
-- [ ] Documentación Swagger/OpenAPI
-- [ ] Logs estructurados
 
 ```bash
 # e2e tests
