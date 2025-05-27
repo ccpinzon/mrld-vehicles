@@ -17,15 +17,20 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
   async onModuleInit() {
     try {
       // Use the Redis URL from Render
-      const redisUrl = this.configService.get<string>(
-        'REDIS_URL',
-        'redis://default:password@host:port',
+      const redisURI = this.configService.get<string>('REDIS_URL');
+      const redisUrl = redisURI || 'redis://localhost:6379';
+      this.logger.log(`Connecting to Redis at ${redisUrl}`);
+
+      const nodeEnv = this.configService.get<string>('NODE_ENV');
+      const isTlsEnabled = nodeEnv !== 'production';
+      this.logger.log(
+        `Redis TLS is ${isTlsEnabled ? 'enabled' : 'disabled'} for ${nodeEnv} environment`,
       );
 
       this.client = Redis.createClient({
         url: redisUrl,
         socket: {
-          tls: true,
+          tls: isTlsEnabled,
           rejectUnauthorized: false,
         },
       });

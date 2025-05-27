@@ -97,7 +97,9 @@ export class TransfersService {
         return JSON.parse(cachedData);
       }
 
-      this.logger.log(`Cache miss for key: ${cacheKey}, fetching from database`);
+      this.logger.log(
+        `Cache miss for key: ${cacheKey}, fetching from database`,
+      );
 
       // If not in cache, query the database
       const queryBuilder = this.transferRepository
@@ -116,7 +118,9 @@ export class TransfersService {
 
       // Filtrar por proyecto si se proporciona
       if (projectId) {
-        queryBuilder.andWhere('Transfer.project_id = :projectId', { projectId });
+        queryBuilder.andWhere('Transfer.project_id = :projectId', {
+          projectId,
+        });
       }
 
       // Filtrar por unidad organizativa si se proporciona
@@ -135,7 +139,10 @@ export class TransfersService {
 
       return transfers;
     } catch (error) {
-      this.logger.error(`Error in findAll method: ${error.message}`, error.stack);
+      this.logger.error(
+        `Error in findAll method: ${error.message}`,
+        error.stack,
+      );
       // If there's an error with Redis, fallback to database query
       return this.findAllFromDatabase(projectId, organizationalUnitId);
     }
