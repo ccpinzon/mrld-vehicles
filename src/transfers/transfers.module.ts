@@ -12,6 +12,7 @@ import {
 import { TransfersService } from './transfers.service';
 import { TransfersController } from './transfers.controller';
 import { AuthModule } from '../auth';
+import { RedisModule } from '../redis';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { AuthModule } from '../auth';
       Transfer,
     ]),
     AuthModule,
+    RedisModule,
   ],
   controllers: [TransfersController],
   providers: [TransfersService],
