@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   postgres:
-    image: postgres:15
+    image: postgres:15-alpine
     container_name: vehicle_transfers_db
     restart: always
     environment:
@@ -13,10 +13,12 @@ services:
       - '5432:5432'
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./db-init:/docker-entrypoint-initdb.d
 
   app:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: vehicle_transfers_api
     restart: always
     ports:
@@ -30,6 +32,7 @@ services:
       DB_PASSWORD: password
       DB_NAME: vehicle_transfers
       NODE_ENV: development
+      DB_SSL_REQUIRED: false
     volumes:
       - .:/app
       - /app/node_modules
