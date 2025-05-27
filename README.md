@@ -36,31 +36,8 @@ API RESTful desarrollada con NestJS y TypeORM para la gestión de transferencias
 - ✅ **Scripts de seeding para datos de prueba**
 - ✅ **Docker Compose para desarrollo**
 
-## Estructura de Entidades
-
-### Entidades Principales
-
-- **User** - Usuarios del sistema con roles y permisos
-- **Role** - Roles de usuario (admin, user, etc.)
-- **Permission** - Permisos granulares
-- **Project** - Proyectos organizacionales
-- **OrganizationalUnit** - Unidades organizativas por proyecto
-- **Vehicle** - Vehículos con placa y tipo de servicio
-- **Transfer** - Transferencias de vehículos entre usuarios
-
-### Relaciones Implementadas
-
-- User ↔ Role (Many-to-Many)
-- Role ↔ Permission (Many-to-Many)
-- User ↔ Project (Many-to-Many)
-- User ↔ OrganizationalUnit (Many-to-Many)
-- Project → OrganizationalUnit (One-to-Many)
-- User → Transfer (One-to-Many como cliente/transmitente)
-- Vehicle → Transfer (One-to-Many)
 
 ## Configuración Rápida
-
-### 1. Instalación
 
 ### 1. Instalación
 
@@ -68,14 +45,7 @@ API RESTful desarrollada con NestJS y TypeORM para la gestión de transferencias
 npm install
 ```
 
-### 2. Configuración de Variables de Entorno
-
-```bash
-cp .env.example .env
-# Editar .env con tu configuración de base de datos
-```
-
-### 3. Base de Datos con Docker
+### 2. Base de Datos con Docker
 
 ```bash
 # Iniciar PostgreSQL con Docker Compose
@@ -85,7 +55,7 @@ docker-compose up postgres -d
 createdb vehicle_transfers
 ```
 
-### 4. Ejecutar Migraciones y Seeding
+### 3. Ejecutar Migraciones y Seeding
 
 ```bash
 # Las migraciones se ejecutan automáticamente con synchronize: true
@@ -93,7 +63,7 @@ createdb vehicle_transfers
 npm run seed
 ```
 
-### 5. Iniciar la Aplicación
+### 4. Iniciar la Aplicación
 
 ```bash
 # Desarrollo
@@ -178,15 +148,8 @@ npm run lint
 npm run format
 ```
 
-## Validaciones Implementadas
 
-1. **Check Constraint**: Cliente y transmitente deben ser diferentes
-2. **Foreign Key Compuesta**: Unidad organizativa debe pertenecer al proyecto
-3. **Índices**: Optimización para consultas frecuentes
-4. **Cascade**: Eliminación en cascada para relaciones padre-hijo
-5. **Validación de DTOs**: Campos requeridos y tipos de datos
-
-## Próximas Características
+## Next Steps
 
 - [ ] Autenticación JWT
 - [ ] Endpoints CRUD completos para todas las entidades

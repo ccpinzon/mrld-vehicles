@@ -19,7 +19,7 @@ export class Permission {
   description: string;
 
   // Relación Many-to-Many con roles
-  @ManyToMany(() => Role, (role): Promise<Permission[]> => role.permissions)
+  @ManyToMany(() => Role, (role) => role.permissions)
   @JoinTable({
     name: 'role_permissions',
     joinColumn: { name: 'permission_id', referencedColumnName: 'id' },
