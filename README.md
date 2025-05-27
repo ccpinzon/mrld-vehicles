@@ -21,78 +21,190 @@
   <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
   [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-## Description
+# Vehicle Transfers API
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+API RESTful desarrollada con NestJS y TypeORM para la gestión de transferencias de vehículos, incluyendo usuarios, roles, permisos, proyectos y unidades organizativas.
 
-## Project setup
+## Características
+
+- ✅ **Entidades TypeORM completas** basadas en DDL PostgreSQL
+- ✅ **Relaciones Many-to-Many y One-to-Many** implementadas
+- ✅ **Validaciones con class-validator**
+- ✅ **DTOs para transferencia de datos**
+- ✅ **Servicios y controladores CRUD**
+- ✅ **Configuración por variables de entorno**
+- ✅ **Scripts de seeding para datos de prueba**
+- ✅ **Docker Compose para desarrollo**
+
+## Estructura de Entidades
+
+### Entidades Principales
+
+- **User** - Usuarios del sistema con roles y permisos
+- **Role** - Roles de usuario (admin, user, etc.)
+- **Permission** - Permisos granulares
+- **Project** - Proyectos organizacionales
+- **OrganizationalUnit** - Unidades organizativas por proyecto
+- **Vehicle** - Vehículos con placa y tipo de servicio
+- **Transfer** - Transferencias de vehículos entre usuarios
+
+### Relaciones Implementadas
+
+- User ↔ Role (Many-to-Many)
+- Role ↔ Permission (Many-to-Many)
+- User ↔ Project (Many-to-Many)
+- User ↔ OrganizationalUnit (Many-to-Many)
+- Project → OrganizationalUnit (One-to-Many)
+- User → Transfer (One-to-Many como cliente/transmitente)
+- Vehicle → Transfer (One-to-Many)
+
+## Configuración Rápida
+
+### 1. Instalación
+
+### 1. Instalación
 
 ```bash
-$ npm install
+npm install
 ```
 
-## Compile and run the project
+### 2. Configuración de Variables de Entorno
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+cp .env.example .env
+# Editar .env con tu configuración de base de datos
 ```
 
-## Run tests
+### 3. Base de Datos con Docker
 
 ```bash
-# unit tests
-$ npm run test
+# Iniciar PostgreSQL con Docker Compose
+docker-compose up postgres -d
+
+# O usar PostgreSQL local y crear la base de datos
+createdb vehicle_transfers
+```
+
+### 4. Ejecutar Migraciones y Seeding
+
+```bash
+# Las migraciones se ejecutan automáticamente con synchronize: true
+# Ejecutar seeding para datos de prueba
+npm run seed
+```
+
+### 5. Iniciar la Aplicación
+
+```bash
+# Desarrollo
+npm run start:dev
+
+# Producción
+npm run start:prod
+```
+
+## API Endpoints
+
+### Transfers
+
+- `POST /transfers` - Crear nueva transferencia
+- `GET /transfers` - Listar todas las transferencias
+- `GET /transfers/:id` - Obtener transferencia por ID
+
+### Usuarios (Próximamente)
+
+- `POST /users` - Crear usuario
+- `GET /users` - Listar usuarios
+- `GET /users/:id` - Obtener usuario por ID
+
+### Vehículos (Próximamente)
+
+- `POST /vehicles` - Crear vehículo
+- `GET /vehicles` - Listar vehículos
+- `GET /vehicles/:id` - Obtener vehículo por ID
+
+## Ejemplo de Uso
+
+### Crear una Transferencia
+
+```bash
+curl -X POST http://localhost:3000/transfers \
+  -H "Content-Type: application/json" \
+  -d '{
+    "type": "Venta",
+    "vehicleId": 1,
+    "clientId": 2,
+    "transmitterId": 3,
+    "projectId": 1,
+    "organizationalUnitId": 1
+  }'
+```
+
+### Listar Transferencias
+
+```bash
+curl http://localhost:3000/transfers
+```
+
+## Desarrollo con Docker
+
+```bash
+# Iniciar todo el stack
+docker-compose up
+
+# Solo la base de datos
+docker-compose up postgres -d
+
+# Rebuild de la aplicación
+docker-compose up --build app
+```
+
+## Scripts Disponibles
+
+```bash
+# Compilar proyecto
+npm run build
+
+# Ejecutar seeding
+npm run seed
+
+# Tests
+npm run test
+
+# Linting
+npm run lint
+
+# Formateo de código
+npm run format
+```
+
+## Validaciones Implementadas
+
+1. **Check Constraint**: Cliente y transmitente deben ser diferentes
+2. **Foreign Key Compuesta**: Unidad organizativa debe pertenecer al proyecto
+3. **Índices**: Optimización para consultas frecuentes
+4. **Cascade**: Eliminación en cascada para relaciones padre-hijo
+5. **Validación de DTOs**: Campos requeridos y tipos de datos
+
+## Próximas Características
+
+- [ ] Autenticación JWT
+- [ ] Endpoints CRUD completos para todas las entidades
+- [ ] Paginación y filtros
+- [ ] Auditoría de cambios
+- [ ] Tests unitarios e integración
+- [ ] Documentación Swagger/OpenAPI
+- [ ] Rate limiting
+- [ ] Logs estructurados
+
 
 # e2e tests
+
 $ npm run test:e2e
 
 # test coverage
+
 $ npm run test:cov
-```
 
-## Deployment
+````
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
-
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
-
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).

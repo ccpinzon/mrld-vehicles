@@ -1,0 +1,34 @@
+import { DataSource } from 'typeorm';
+import { ConfigService } from '@nestjs/config';
+import * as entities from '../entities';
+import { seedDatabase } from './seed';
+
+async function bootstrap() {
+  const configService = new ConfigService();
+
+  const dataSource = new DataSource({
+    type: 'postgres',
+    host: configService.get('DB_HOST', 'localhost'),
+    port: configService.get('DB_PORT', 5432),
+    username: configService.get('DB_USERNAME', 'postgres'),
+    password: configService.get('DB_PASSWORD', 'password'),
+    database: configService.get('DB_NAME', 'vehicle_transfers'),
+    entities: Object.values(entities),
+    synchronize: true,
+  });
+
+  try {
+    await dataSource.initialize();
+    console.log('Conexión a la base de datos establecida');
+
+    await seedDatabase(dataSource);
+
+    console.log('Seeding completado exitosamente');
+  } catch (error) {
+    console.error('Error durante el seeding:', error);
+  } finally {
+    await dataSource.destroy();
+  }
+}
+
+bootstrap();

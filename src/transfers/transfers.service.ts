@@ -1,0 +1,108 @@
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import {
+  Transfer,
+  User,
+  Vehicle,
+  Project,
+  OrganizationalUnit,
+} from '../entities';
+import { CreateTransferDto } from '../dto/create-transfer.dto';
+
+@Injectable()
+export class TransfersService {
+  constructor(
+    @InjectRepository(Transfer)
+    private readonly transferRepository: Repository<Transfer>,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+    @InjectRepository(Vehicle)
+    private readonly vehicleRepository: Repository<Vehicle>,
+    @InjectRepository(Project)
+    private readonly projectRepository: Repository<Project>,
+    @InjectRepository(OrganizationalUnit)
+    private readonly organizationalUnitRepository: Repository<OrganizationalUnit>,
+  ) {}
+
+  async create(createTransferDto: CreateTransferDto): Promise<Transfer> {
+    // Validar que el cliente y el transmitente existen
+    const client = await this.userRepository.findOne({
+      where: { id: createTransferDto.clientId },
+    });
+    if (!client) {
+      throw new Error('Cliente no encontrado');
+    }
+
+    const transmitter = await this.userRepository.findOne({
+      where: { id: createTransferDto.transmitterId },
+    });
+    if (!transmitter) {
+      throw new Error('Transmitente no encontrado');
+    }
+
+    // Validar que el vehículo existe
+    const vehicle = await this.vehicleRepository.findOne({
+      where: { id: createTransferDto.vehicleId },
+    });
+    if (!vehicle) {
+      throw new Error('Vehículo no encontrado');
+    }
+
+    // Validar que el proyecto existe
+    const project = await this.projectRepository.findOne({
+      where: { id: createTransferDto.projectId },
+    });
+    if (!project) {
+      throw new Error('Proyecto no encontrado');
+    }
+
+    // Validar que la unidad organizativa existe y pertenece al proyecto
+    const organizationalUnit = await this.organizationalUnitRepository.findOne({
+      where: {
+        id: createTransferDto.organizationalUnitId,
+        projectId: createTransferDto.projectId,
+      },
+    });
+    if (!organizationalUnit) {
+      throw new Error(
+        'Unidad organizativa no encontrada o no pertenece al proyecto',
+      );
+    }
+
+    // Crear la transferencia
+    const transfer = this.transferRepository.create(createTransferDto);
+    return await this.transferRepository.save(transfer);
+  }
+
+  async findAll(): Promise<Transfer[]> {
+    return await this.transferRepository.find({
+      relations: [
+        'vehicle',
+        'client',
+        'transmitter',
+        'project',
+        'organizationalUnit',
+      ],
+    });
+  }
+
+  async findOne(id: number): Promise<Transfer> {
+    const transfer = await this.transferRepository.findOne({
+      where: { id },
+      relations: [
+        'vehicle',
+        'client',
+        'transmitter',
+        'project',
+        'organizationalUnit',
+      ],
+    });
+
+    if (!transfer) {
+      throw new Error('Transferencia no encontrada');
+    }
+
+    return transfer;
+  }
+}
