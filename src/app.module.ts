@@ -6,6 +6,7 @@ import { AppService } from './app.service';
 import { TransfersModule } from './transfers/transfers.module';
 import { TransferReportModule } from './transfer-report/transfer-report.module';
 import { AuthModule } from './auth';
+import { RedisModule } from './redis';
 import * as entities from './entities';
 
 @Module({
@@ -35,6 +36,7 @@ import * as entities from './entities';
     AuthModule,
     TransfersModule,
     TransferReportModule,
+    RedisModule,
   ],
   controllers: [AppController],
   providers: [AppService],

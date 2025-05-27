@@ -187,7 +187,8 @@ npm run format
   - [x] Validacion de roles y permisos
 - [x] Docker
 - [X] CronJobs de ejemplo
-- [ ] Redis caching (render kev - value)
+- [X] Redis caching (render kev - value)
+- [ ] Deploy Render
 - [ ] Documentación Swagger/OpenAPI
 - [ ] Logs estructurados
 
