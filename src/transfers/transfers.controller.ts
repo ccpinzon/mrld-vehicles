@@ -5,7 +5,17 @@ import {
   Body,
   Param,
   ParseIntPipe,
+  UseGuards,
+  Query,
 } from '@nestjs/common';
+import {
+  JwtAuthGuard,
+  PermissionsGuard,
+  ProjectAccessGuard,
+  OrganizationalUnitAccessGuard,
+  OrganizationalUnitProjectRelationGuard,
+  Permissions,
+} from '../auth';
 import { TransfersService } from './transfers.service';
 import { CreateTransferDto } from '../dto';
 
@@ -14,17 +24,52 @@ export class TransfersController {
   constructor(private readonly transfersService: TransfersService) {}
 
   @Post()
+  @UseGuards(
+    JwtAuthGuard,
+    PermissionsGuard,
+    ProjectAccessGuard,
+    OrganizationalUnitAccessGuard,
+    OrganizationalUnitProjectRelationGuard,
+  )
+  @Permissions('create_transfers')
   async create(@Body() createTransferDto: CreateTransferDto) {
     return await this.transfersService.create(createTransferDto);
   }
 
   @Get()
-  async findAll() {
-    return await this.transfersService.findAll();
+  @UseGuards(
+    JwtAuthGuard,
+    PermissionsGuard,
+    ProjectAccessGuard,
+    OrganizationalUnitAccessGuard,
+    OrganizationalUnitProjectRelationGuard,
+  )
+  @Permissions('view_transfers')
+  async findAll(
+    @Query('projectId') projectId?: number,
+    @Query('organizationalUnitId') organizationalUnitId?: number,
+  ) {
+    return await this.transfersService.findAll(projectId, organizationalUnitId);
   }
 
   @Get(':id')
-  async findOne(@Param('id', ParseIntPipe) id: number) {
-    return await this.transfersService.findOne(id);
+  @UseGuards(
+    JwtAuthGuard,
+    PermissionsGuard,
+    ProjectAccessGuard,
+    OrganizationalUnitAccessGuard,
+    OrganizationalUnitProjectRelationGuard,
+  )
+  @Permissions('view_transfers')
+  async findOne(
+    @Param('id', ParseIntPipe) id: number,
+    @Query('projectId') projectId?: number,
+    @Query('organizationalUnitId') organizationalUnitId?: number,
+  ) {
+    return await this.transfersService.findOne(
+      id,
+      projectId,
+      organizationalUnitId,
+    );
   }
 }

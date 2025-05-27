@@ -75,8 +75,11 @@ export class TransfersService {
     return await this.transferRepository.save(transfer);
   }
 
-  async findAll(): Promise<Transfer[]> {
-    return await this.transferRepository
+  async findAll(
+    projectId?: number,
+    organizationalUnitId?: number,
+  ): Promise<Transfer[]> {
+    const queryBuilder = this.transferRepository
       .createQueryBuilder('Transfer')
       .leftJoinAndSelect('Transfer.vehicle', 'vehicle')
       .leftJoinAndSelect('Transfer.client', 'client')
@@ -86,14 +89,32 @@ export class TransfersService {
         'project.id',
         'project.name',
         'project.description',
-        'project.created_at'
+        'project.created_at',
       ])
-      .leftJoinAndSelect('Transfer.organizationalUnit', 'organizationalUnit')
-      .getMany();
+      .leftJoinAndSelect('Transfer.organizationalUnit', 'organizationalUnit');
+
+    // Filtrar por proyecto si se proporciona
+    if (projectId) {
+      queryBuilder.andWhere('Transfer.project_id = :projectId', { projectId });
+    }
+
+    // Filtrar por unidad organizativa si se proporciona
+    if (organizationalUnitId) {
+      queryBuilder.andWhere(
+        'Transfer.organizational_unit_id = :organizationalUnitId',
+        { organizationalUnitId },
+      );
+    }
+
+    return await queryBuilder.getMany();
   }
 
-  async findOne(id: number): Promise<Transfer> {
-    const transfer = await this.transferRepository
+  async findOne(
+    id: number,
+    projectId?: number,
+    organizationalUnitId?: number,
+  ): Promise<Transfer> {
+    const queryBuilder = this.transferRepository
       .createQueryBuilder('Transfer')
       .leftJoinAndSelect('Transfer.vehicle', 'vehicle')
       .leftJoinAndSelect('Transfer.client', 'client')
@@ -103,11 +124,25 @@ export class TransfersService {
         'project.id',
         'project.name',
         'project.description',
-        'project.created_at'
+        'project.created_at',
       ])
       .leftJoinAndSelect('Transfer.organizationalUnit', 'organizationalUnit')
-      .where('Transfer.id = :id', { id })
-      .getOne();
+      .where('Transfer.id = :id', { id });
+
+    // Filtrar por proyecto si se proporciona
+    if (projectId) {
+      queryBuilder.andWhere('Transfer.project_id = :projectId', { projectId });
+    }
+
+    // Filtrar por unidad organizativa si se proporciona
+    if (organizationalUnitId) {
+      queryBuilder.andWhere(
+        'Transfer.organizational_unit_id = :organizationalUnitId',
+        { organizationalUnitId },
+      );
+    }
+
+    const transfer = await queryBuilder.getOne();
 
     if (!transfer) {
       throw new Error('Transferencia no encontrada');

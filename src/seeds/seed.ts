@@ -54,8 +54,8 @@ export async function seedDatabase(dataSource: DataSource) {
   const userRole = await roleRepository.save({
     name: 'user',
     description: 'Usuario estándar',
-    permissions: permissions.filter(p => 
-      ['view_transfers', 'create_transfers'].includes(p.name)
+    permissions: permissions.filter((p) =>
+      ['view_transfers', 'create_transfers'].includes(p.name),
     ), // Asignar permisos limitados al rol de usuario
   });
 

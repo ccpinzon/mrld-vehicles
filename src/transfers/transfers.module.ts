@@ -11,6 +11,7 @@ import {
 } from '../entities';
 import { TransfersService } from './transfers.service';
 import { TransfersController } from './transfers.controller';
+import { AuthModule } from '../auth';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { TransfersController } from './transfers.controller';
       Vehicle,
       Transfer,
     ]),
+    AuthModule,
   ],
   controllers: [TransfersController],
   providers: [TransfersService],

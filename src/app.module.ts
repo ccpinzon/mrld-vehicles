@@ -4,6 +4,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TransfersModule } from './transfers/transfers.module';
+import { AuthModule } from './auth';
 import * as entities from './entities';
 
 @Module({
@@ -30,6 +31,7 @@ import * as entities from './entities';
       }),
       inject: [ConfigService],
     }),
+    AuthModule,
     TransfersModule,
   ],
   controllers: [AppController],

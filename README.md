@@ -25,20 +25,6 @@
 
 API RESTful desarrollada con NestJS y TypeORM para la gestión de transferencias de vehículos, incluyendo usuarios, roles, permisos, proyectos y unidades organizativas.
 
-## Características
-
-- ✅ **Entidades TypeORM completas** basadas en DDL PostgreSQL
-- ✅ **Relaciones Many-to-Many y One-to-Many** implementadas
-- ✅ **Validaciones con class-validator**
-- ✅ **DTOs para transferencia de datos**
-- ✅ **Servicios y controladores CRUD**
-- ✅ **Configuración por variables de entorno**
-- ✅ **Scripts de seeding para datos de prueba**
-- ✅ **Docker Compose para desarrollo**
-
-
-## Configuración Rápida
-
 ### 1. Instalación
 
 ```bash
@@ -58,7 +44,6 @@ createdb vehicle_transfers
 ### 3. Ejecutar Migraciones y Seeding
 
 ```bash
-# Las migraciones se ejecutan automáticamente con synchronize: true
 # Ejecutar seeding para datos de prueba
 npm run seed
 ```
@@ -74,6 +59,10 @@ npm run start:prod
 ```
 
 ## API Endpoints
+
+### Autenticación
+
+- `POST /auth/login` - Iniciar sesión y obtener token JWT
 
 ### Transfers
 
@@ -95,11 +84,35 @@ npm run start:prod
 
 ## Ejemplo de Uso
 
+### Autenticación
+
+```bash
+curl -X POST http://localhost:3000/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "admin",
+    "password": "password123"
+  }'
+```
+
+Respuesta:
+```json
+{
+  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "user": {
+    "id": 1,
+    "username": "admin",
+    "email": "admin@example.com"
+  }
+}
+```
+
 ### Crear una Transferencia
 
 ```bash
 curl -X POST http://localhost:3000/transfers \
   -H "Content-Type: application/json" \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." \
   -d '{
     "type": "Venta",
     "vehicleId": 1,
@@ -113,19 +126,24 @@ curl -X POST http://localhost:3000/transfers \
 ### Listar Transferencias
 
 ```bash
-curl http://localhost:3000/transfers
+curl http://localhost:3000/transfers \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+```
+
+### Listar Transferencias Filtradas por Proyecto y Unidad Organizativa
+
+```bash
+curl http://localhost:3000/transfers?projectId=1&organizationalUnitId=1 \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
 ```
 
 ## Desarrollo con Docker
 
 ```bash
-# Iniciar todo el stack
+
 docker-compose up
 
-# Solo la base de datos
-docker-compose up postgres -d
-
-# Rebuild de la aplicación
+# Rebuild
 docker-compose up --build app
 ```
 
@@ -151,16 +169,22 @@ npm run format
 
 ## Next Steps
 
-- [ ] Autenticación JWT
-- [ ] Endpoints CRUD completos para todas las entidades
-- [ ] Paginación y filtros
-- [ ] Auditoría de cambios
-- [ ] Tests unitarios e integración
+- [-] Endpoints CRUD para:
+  - [X] Usuarios
+  - [X] Vehículos
+  - [ ] Proyectos
+  - [ ] Unidades Organizativas
+  - [ ] Roles y Permisos
+  - [X] Transferencias
+- [x] Autenticación JWT
+  - [x] Validacion de roles y permisos
+- [ ] Docker
+- [ ] CronJobs de ejemplo
+- [ ] Redis caching (render kev - value)
 - [ ] Documentación Swagger/OpenAPI
-- [ ] Rate limiting
 - [ ] Logs estructurados
 
-
+```bash
 # e2e tests
 
 $ npm run test:e2e
@@ -170,4 +194,3 @@ $ npm run test:e2e
 $ npm run test:cov
 
 ````
-
