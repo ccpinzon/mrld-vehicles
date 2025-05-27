@@ -4,6 +4,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TransfersModule } from './transfers/transfers.module';
+import { TransferReportModule } from './transfer-report/transfer-report.module';
 import { AuthModule } from './auth';
 import * as entities from './entities';
 
@@ -33,6 +34,7 @@ import * as entities from './entities';
     }),
     AuthModule,
     TransfersModule,
+    TransferReportModule,
   ],
   controllers: [AppController],
   providers: [AppService],

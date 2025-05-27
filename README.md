@@ -1,12 +1,12 @@
-<p align="center">
+<p >
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
 </p>
 
 [circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
 [circleci-url]: https://circleci.com/gh/nestjs/nest
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
+  <p >A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
+    <p >
 <a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
 <a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
 <a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
@@ -137,7 +137,14 @@ curl http://localhost:3000/transfers?projectId=1&organizationalUnitId=1 \
   -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
 ```
 
-## Desarrollo con Docker
+### Generar Reporte de Transferencias Manualmente
+
+```bash
+curl http://localhost:3000/transfer-report/generate \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+```
+
+## Docker
 
 ```bash
 
@@ -178,8 +185,8 @@ npm run format
   - [X] Transferencias
 - [x] Autenticación JWT
   - [x] Validacion de roles y permisos
-- [ ] Docker
-- [ ] CronJobs de ejemplo
+- [x] Docker
+- [X] CronJobs de ejemplo
 - [ ] Redis caching (render kev - value)
 - [ ] Documentación Swagger/OpenAPI
 - [ ] Logs estructurados
