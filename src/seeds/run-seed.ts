@@ -20,6 +20,7 @@ async function bootstrap() {
     database: configService.get('DB_NAME', 'vehicle_transfers_db'),
     entities: Object.values(entities),
     synchronize: true,
+    dropSchema: true,
     ssl:
       configService.get<string>('DB_SSL_REQUIRED') === 'true'
         ? { rejectUnauthorized: false }

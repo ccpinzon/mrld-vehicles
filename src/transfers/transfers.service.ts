@@ -76,28 +76,38 @@ export class TransfersService {
   }
 
   async findAll(): Promise<Transfer[]> {
-    return await this.transferRepository.find({
-      relations: [
-        'vehicle',
-        'client',
-        'transmitter',
-        'project',
-        'organizationalUnit',
-      ],
-    });
+    return await this.transferRepository
+      .createQueryBuilder('Transfer')
+      .leftJoinAndSelect('Transfer.vehicle', 'vehicle')
+      .leftJoinAndSelect('Transfer.client', 'client')
+      .leftJoinAndSelect('Transfer.transmitter', 'transmitter')
+      .leftJoin('projects', 'project', 'project.id = Transfer.project_id')
+      .addSelect([
+        'project.id',
+        'project.name',
+        'project.description',
+        'project.created_at'
+      ])
+      .leftJoinAndSelect('Transfer.organizationalUnit', 'organizationalUnit')
+      .getMany();
   }
 
   async findOne(id: number): Promise<Transfer> {
-    const transfer = await this.transferRepository.findOne({
-      where: { id },
-      relations: [
-        'vehicle',
-        'client',
-        'transmitter',
-        'project',
-        'organizationalUnit',
-      ],
-    });
+    const transfer = await this.transferRepository
+      .createQueryBuilder('Transfer')
+      .leftJoinAndSelect('Transfer.vehicle', 'vehicle')
+      .leftJoinAndSelect('Transfer.client', 'client')
+      .leftJoinAndSelect('Transfer.transmitter', 'transmitter')
+      .leftJoin('projects', 'project', 'project.id = Transfer.project_id')
+      .addSelect([
+        'project.id',
+        'project.name',
+        'project.description',
+        'project.created_at'
+      ])
+      .leftJoinAndSelect('Transfer.organizationalUnit', 'organizationalUnit')
+      .where('Transfer.id = :id', { id })
+      .getOne();
 
     if (!transfer) {
       throw new Error('Transferencia no encontrada');
