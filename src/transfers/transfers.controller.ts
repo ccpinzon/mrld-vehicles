@@ -7,7 +7,7 @@ import {
   ParseIntPipe,
 } from '@nestjs/common';
 import { TransfersService } from './transfers.service';
-import { CreateTransferDto } from '../dto/create-transfer.dto';
+import { CreateTransferDto } from '../dto';
 
 @Controller('transfers')
 export class TransfersController {

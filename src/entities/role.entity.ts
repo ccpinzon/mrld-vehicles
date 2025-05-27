@@ -1,4 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToMany } from 'typeorm';
+import { Permission } from './permission.entity';
+import { User } from './user.entity';
 
 @Entity('roles')
 export class Role {
@@ -13,8 +15,8 @@ export class Role {
 
   // Relaciones Many-to-Many
   @ManyToMany('User', 'roles')
-  users: any[];
+  users: User[];
 
   @ManyToMany('Permission', 'roles', { cascade: false })
-  permissions: any[];
+  permissions: Permission[];
 }

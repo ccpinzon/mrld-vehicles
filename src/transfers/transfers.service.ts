@@ -8,7 +8,7 @@ import {
   Project,
   OrganizationalUnit,
 } from '../entities';
-import { CreateTransferDto } from '../dto/create-transfer.dto';
+import { CreateTransferDto } from '../dto';
 
 @Injectable()
 export class TransfersService {

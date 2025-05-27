@@ -7,7 +7,7 @@ import {
   ParseIntPipe,
 } from '@nestjs/common';
 import { VehiclesService } from './vehicles.service';
-import { CreateVehicleDto } from '../dto/create-vehicle.dto';
+import { CreateVehicleDto } from '../dto';
 
 @Controller('vehicles')
 export class VehiclesController {
